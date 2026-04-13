@@ -1,10 +1,10 @@
 import tkinter as tk
 
-def createUi(name: str, size: str):
+def createUi():
     # CRIANDO JANELA
     root = tk.Tk()
-    root.title(name)
-    root.geometry(size)
+    root.title("Nuclear Spammer")
+    root.geometry("1000x600")
     root.resizable(False, False)
     
     
@@ -20,12 +20,27 @@ def createUi(name: str, size: str):
     rightArea = tk.Frame(main, width= 350, bg= "gray")
     rightArea.pack(side="right", fill="y")
     
-    rightArea.pack_propagate(False) #mantem largura fixa
+    textEditor = tk.Text(rightArea, bg="black", fg="white", insertbackground="white")
+    textEditor.pack(fill="both", expand=True, padx=8, pady=8)
+    
+    rightArea.pack_propagate(False) # mantem largura fixa
+    
+    # AREA DOS BOTOES
+    leftUpArea = tk.Frame(leftArea)
+    leftUpArea.pack(fill="x")
+    
+    # AREA DOS INPUTS
+    leftDownArea = tk.Frame(leftArea)
+    leftDownArea.pack(fill="x", side="bottom")
 
     # BOTOES NO CENTRO DA JANELA
-    infinityButton = tk.Button(leftArea, text="Spammer infinito")
-    finityButton = tk.Button(leftArea, text="Spammer finito")
-    infinityButton.pack(pady = 10)
-    finityButton.pack(pady = 10)
+    label = tk.Label(leftUpArea, text="Qual tipo de Spam deseja realizar?\nFinito ou infinito?")
+    label.pack(pady=30)
+    
+    infinityButton = tk.Button(leftUpArea, text="Infinito")
+    finityButton = tk.Button(leftUpArea, text="Finito")
+    
+    infinityButton.pack(pady = 12, ipady= 15, ipadx= 10)
+    finityButton.pack(pady = 12, ipady= 15, ipadx= 10)
     
     return root
