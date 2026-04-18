@@ -5,4 +5,4 @@ system('cls')
 print("Iniciando")
 
 ui = UiClass.Ui()
-ui.start()
+ui.startUi()

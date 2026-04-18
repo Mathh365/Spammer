@@ -1,12 +1,16 @@
 import tkinter as tk
-
+import spamming
+import threading
 
 class Ui:
     def __init__(self):
+        
+        self.spammer = spamming.Spammer()
+    
         # =========================
         # JANELA PRINCIPAL
         # =========================
-        self.root = tk.Tk()  # ALTERADO: root virou self.root (precisa ser acessível fora do __init__)
+        self.root = tk.Tk()
         self.root.title("Nuclear Spammer")
         self.root.geometry("1000x600")
         self.root.resizable(False, False)
@@ -30,12 +34,7 @@ class Ui:
         rightArea.pack(side="right", fill="y")
         rightArea.pack_propagate(False)
 
-        self.textEditor = tk.Text(
-            rightArea,
-            bg="black",
-            fg="lime",
-            insertbackground="white"
-        )
+        self.textEditor = tk.Text(rightArea, bg="black", fg="lime", insertbackground="white")
         self.textEditor.pack(fill="both", expand=True, padx=5, pady=5)
         self.textEditor.insert("end", ">>> Editor pronto para testes\n")
 
@@ -52,32 +51,30 @@ class Ui:
         leftDownArea.pack(fill="x", side="bottom", pady=(0, 100))
 
         # ===== FRAMES DE INPUT =====
-        self.frameMensagem = tk.Frame(leftDownArea)  # ALTERADO: virou self (precisa ser acessado depois)
-        self.frameReps = tk.Frame(leftDownArea)      # ALTERADO: virou self
-        self.frameStart = tk.Frame(leftDownArea)     # ALTERADO: virou self
+        self.frameMensagem = tk.Frame(leftDownArea)  
+        self.frameReps = tk.Frame(leftDownArea)      
+        self.frameStart = tk.Frame(leftDownArea)     
 
         # =========================
-        # MENSAGEM
+        # MENSAGEM A SER SPAMMADA
         # =========================
-        tk.Label(self.frameMensagem, text="Mensagem a ser spammada").pack()
-        self.entryMsg = tk.Entry(self.frameMensagem)  # ALTERADO: self.entryMsg
+        self.msg = tk.Label(self.frameMensagem, text="Mensagem a ser spammada")
+        self.entryMsg = tk.Entry(self.frameMensagem)
+        self.msg.pack()
         self.entryMsg.pack()
 
         # =========================
         # REPETIÇÕES
         # =========================
-        tk.Label(self.frameReps, text="Número de repetições").pack()
-        self.entryReps = tk.Entry(self.frameReps)  # ALTERADO: self.entryReps
+        self.reps = tk.Label(self.frameReps, text="Número de repetições")
+        self.entryReps = tk.Entry(self.frameReps)
+        self.reps.pack()
         self.entryReps.pack()
 
         # =========================
         # BOTÃO START
         # =========================
-        self.startBtn = tk.Button(
-            self.frameStart,
-            text="Iniciar spam",
-            command=self.start_spam  # ALTERADO: agora chama método da classe
-        )
+        self.startBtn = tk.Button(self.frameStart, text="Iniciar spam", command=self.start_spam)
         self.startBtn.pack()
 
         # =========================
@@ -90,51 +87,40 @@ class Ui:
         # =========================
         # BOTÕES DE MODO
         # =========================
-        tk.Label(
-            leftUpArea,
-            text="Qual tipo de Spam deseja realizar?\nFinito ou infinito?"
-        ).pack(pady=30)
+        tk.Label(leftUpArea, text="Qual tipo de Spam deseja realizar?\nFinito ou infinito?").pack(pady=30)
 
-        tk.Button(
-            leftUpArea,
-            text="Infinito",
-            command=self.set_infinite  # ALTERADO: agora chama método
-        ).pack(pady=12, ipady=15, ipadx=10)
-
-        tk.Button(
-            leftUpArea,
-            text="Finito",
-            command=self.set_finite  # ALTERADO: agora chama método
-        ).pack(pady=12, ipady=15, ipadx=10)
+        tk.Button(leftUpArea, text="Infinito", command=self.setInfinity).pack(pady=12, ipady=15, ipadx=10)
+        tk.Button(leftUpArea, text="Finito", command=self.setFinity).pack(pady=12, ipady=15, ipadx=10)
 
     # =========================
     # MÉTODOS DE CONTROLE
     # =========================
 
-    def set_infinite(self):
-        # ALTERADO: lógica saiu do __init__ e virou evento
+    def setInfinity(self):
         self.frameMensagem.pack()
         self.frameReps.pack_forget()
         self.frameStart.pack()
 
-    def set_finite(self):
-        # ALTERADO: lógica de UI agora controlada por método
+    def setFinity(self):
         self.frameMensagem.pack()
         self.frameReps.pack()
         self.frameStart.pack()
 
-    def start(self):
-        # SEM ALTERAÇÃO: entrada do loop
+    def startUi(self):
         self.root.mainloop()
 
     # =========================
-    # LÓGICA (PLACEHOLDER DO SPAMMER)
+    # SPAMMER
     # =========================
     def start_spam(self):
-        # NOVO: ponto central da lógica futura
-        msg = self.entryMsg.get()
-        reps = self.entryReps.get()
-
-        # debug temporário (você pode trocar depois)
-        print("Mensagem:", msg)
-        print("Repetições:", reps)
+        msg: str = self.entryMsg.get()
+        
+        repsStr = self.entryReps.get()
+        reps = int(repsStr) if repsStr.strip() else None
+        
+        threading.Thread(
+            target=self.spammer.startLoop,
+            args=(msg, reps),
+            daemon=True
+        ).start()
+            
