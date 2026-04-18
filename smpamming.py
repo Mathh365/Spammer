@@ -2,7 +2,7 @@ import pyautogui as auto
 from time import sleep
 import msvcrt
 
-def spammer(msg: str, reps: int | None = None):
+def spammer(msg: str, reps: int = None):
     isInfinity = (reps is None)
     sleep(3)
     

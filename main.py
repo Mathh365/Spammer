@@ -1,8 +1,8 @@
-import ui
+import UiClass
 from os import system
 
 system('cls')
 print("Iniciando")
 
-root = ui.createUi()
-root.mainloop()
+ui = UiClass.Ui()
+ui.start()
